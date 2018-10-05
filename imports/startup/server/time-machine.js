@@ -1,10 +1,3 @@
-/* eslint-disable import/imports-first */
-
-import './comtype-language-extensions.js';
-import './language.js';
-import './routes.js';
-import '/imports/ui_2/helpers';
-
 import { Meteor } from 'meteor/meteor';
 import { moment } from 'meteor/momentjs:moment';
 
@@ -26,12 +19,3 @@ function timeMachine(functionName, endDate, frequency='undefined') {
         console.log('An error occured in the time machine! Check your flux condenser! ' + error)
     }
 }
-
-function calc() {
-    console.log(5+5); 
-}
-
-timeMachine(calc,moment().add(6000, 'milliseconds'),1000);
-
-
-
