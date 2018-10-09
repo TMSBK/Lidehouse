@@ -17,9 +17,9 @@ import { payaccountColumns } from '/imports/api/payaccounts/tables.js';
 import { Reports } from '/imports/api/payaccounts/reports.js';
 
 import { Modal } from 'meteor/peppelg:bootstrap-3-modal';
-import '/imports/ui_2/components/custom-table.js';
-import '/imports/ui_2/modals/confirmation.js';
-import '/imports/ui_2/modals/autoform-edit.js';
+import '/imports/ui_3/views/components/custom-table.js';
+import '/imports/ui_3/views/modals/confirmation.js';
+import '/imports/ui_3/views/modals/autoform-edit.js';
 import '../common/ibox-tools.js';
 import '../components/balance-widget.js';
 import './parcels-finances.html';
@@ -39,7 +39,7 @@ Template.Parcels_finances.helpers({
   paymentsTableDataFn() {
     function getTableData() {
       const communityId = Session.get('activeCommunityId');
-      const myParcelIds = Memberships.find({ communityId, 'person.userId': Meteor.userId(), role: 'owner' }).map(m => m.parcel().serial.toString());
+      const myParcelIds = Memberships.find({ communityId, 'active.now': true, role: 'owner', 'person.userId': Meteor.userId() }).map(m => m.parcel().serial.toString());
       return Payments.find({ communityId, 'accounts.Könyvelés helye': { $in: myParcelIds }, phase: 'done' }).fetch();
     }
     return getTableData;
@@ -47,7 +47,7 @@ Template.Parcels_finances.helpers({
   billsTableDataFn() {
     function getTableData() {
       const communityId = Session.get('activeCommunityId');
-      const myParcelIds = Memberships.find({ communityId, userId: Meteor.userId(), role: 'owner' }).map(m => m.parcel().serial.toString());
+      const myParcelIds = Memberships.find({ communityId, 'active.now': true, role: 'owner', 'person.userId': Meteor.userId() }).map(m => m.parcel().serial.toString());
 //      console.log('myParcelIds', myParcelIds);
       const myBills = Payments.find({ communityId, 'accounts.Könyvelés helye': { $in: myParcelIds }, phase: 'bill' }).fetch();
 //      console.log('myBills', myBills);

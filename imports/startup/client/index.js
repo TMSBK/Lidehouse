@@ -3,7 +3,7 @@
 import './comtype-language-extensions.js';
 import './language.js';
 import './routes.js';
-import '/imports/ui_2/helpers';
+import '/imports/ui_3/helpers';
 
 import { Meteor } from 'meteor/meteor';
 import { moment } from 'meteor/momentjs:moment';
@@ -32,6 +32,3 @@ function calc() {
 }
 
 timeMachine(calc,moment().add(6000, 'milliseconds'),1000);
-
-
-

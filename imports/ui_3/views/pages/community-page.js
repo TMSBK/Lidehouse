@@ -21,9 +21,9 @@ import { roleshipColumns } from '/imports/api/memberships/tables.js';
 import { update as updateMembership, remove as removeMembership } from '/imports/api/memberships/methods.js';
 import '/imports/api/users/users.js';
 import { Modal } from 'meteor/peppelg:bootstrap-3-modal';
-import '/imports/ui_2/modals/confirmation.js';
-import '/imports/ui_2/modals/autoform-edit.js';
-import { afCommunityUpdateModal } from './communities-edit.js';
+import '/imports/ui_3/views/modals/confirmation.js';
+import '/imports/ui_3/views/modals/autoform-edit.js';
+import { afCommunityUpdateModal } from '/imports/ui_3/views/components/communities-edit.js';
 import '../common/page-heading.js';
 import '../components/action-buttons.html';
 import './community-page.html';
@@ -83,7 +83,7 @@ Template.Community_page.helpers({
     const communityId = Template.instance().getCommunityId();
     result.push({
       name: 'owner',
-      count: Memberships.find({ communityId, role: 'owner' }).count(),
+      count: Memberships.find({ communityId, 'active.now': true, role: 'owner' }).count(),
     });
     Parcels.typeValues.forEach(type =>
       result.push({
@@ -95,15 +95,15 @@ Template.Community_page.helpers({
   },*/
   leaders() {
     const communityId = Template.instance().getCommunityId();
-    return Memberships.find({ communityId, role: { $in: leaderRoles } });
+    return Memberships.find({ communityId, 'active.now': true, role: { $in: leaderRoles } });
   },
   nonLeaders() {
     const communityId = Template.instance().getCommunityId();
-    return Memberships.find({ communityId, role: { $in: nonLeaderRoles } });
+    return Memberships.find({ communityId, 'active.now': true, role: { $in: nonLeaderRoles } });
   },
   officers() {
     const communityId = Template.instance().getCommunityId();
-    return Memberships.find({ communityId, role: { $in: officerRoles } });
+    return Memberships.find({ communityId, 'active.now': true, role: { $in: officerRoles } });
   },
   parcelsTableDataFn() {
     const templateInstance = Template.instance();
