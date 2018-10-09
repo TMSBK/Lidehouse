@@ -179,6 +179,9 @@ Meteor.users.helpers({
   isInCommunity(communityId) {
     return !!Memberships.findOne({ 'person.userId': this._id, communityId });
   },
+  deleteUser() {
+    return 'Delete';
+  },
   // Voting
   votingUnits(communityId) {
     let sum = 0;

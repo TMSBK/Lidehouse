@@ -17,5 +17,4 @@ function timeMachine(functionName, endDate, frequency='undefined') {
         }
     } catch (error) {
         console.log('An error occured in the time machine! Check your flux condenser! ' + error)
-    }
-}
+    }}
