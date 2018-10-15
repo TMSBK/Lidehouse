@@ -6,10 +6,15 @@ import { _ } from 'meteor/underscore';
 
 import { AutoForm } from 'meteor/aldeed:autoform';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+<<<<<<< HEAD
 import { setRouteBeforeSignin } from '/imports/startup/both/useraccounts-configuration.js';
 
+=======
+import { AccountsTemplates } from 'meteor/useraccounts:core';
+>>>>>>> upstream/master
 import { TAPi18n } from 'meteor/tap:i18n';
 import { datatables_i18n } from 'meteor/ephemer:reactive-datatables';
+import { Fraction } from 'fractional';
 
 import { __ } from '/imports/localization/i18n.js';
 import { leaderRoles, nonLeaderRoles, officerRoles } from '/imports/api/permissions/roles.js';
@@ -18,8 +23,7 @@ import { Parcels } from '/imports/api/parcels/parcels.js';
 import { remove as removeParcel } from '/imports/api/parcels/methods.js';
 import { parcelColumns, highlightMyRow } from '/imports/api/parcels/tables.js';
 import { Memberships } from '/imports/api/memberships/memberships.js';
-import { roleshipColumns } from '/imports/api/memberships/tables.js';
-import { update as updateMembership, remove as removeMembership } from '/imports/api/memberships/methods.js';
+import { update as updateMembership, remove as removeMembership, insertUnapproved as insertMembershipUnapproved } from '/imports/api/memberships/methods.js';
 import '/imports/api/users/users.js';
 import { Modal } from 'meteor/peppelg:bootstrap-3-modal';
 import '/imports/ui_3/views/modals/confirmation.js';
@@ -28,6 +32,8 @@ import { afCommunityUpdateModal } from '/imports/ui_3/views/components/communiti
 import '../common/page-heading.js';
 import '../components/action-buttons.html';
 import './community-page.html';
+
+import { displayError, displayMessage } from '/imports/ui_3/lib/errors.js';
 
 Template.Community_page.onCreated(function() {
   this.getCommunityId = () => FlowRouter.getParam('_cid') || Session.get('activeCommunityId');
@@ -253,23 +259,15 @@ Template.Community_page.events({
     });
   },
   'click .js-join'(event) {
-    if (!Meteor.user()) {
-      setRouteBeforeSignin(FlowRouter.current());
-      FlowRouter.go('signin');
-      return;
-    }
-
-    const communityId = Template.instance().getCommunityId();
-
-    Session.set('joiningCommunityId', communityId);
-
-    Modal.show('Autoform_edit', {
-      title: 'pleaseSupplyParcelData',
-      id: 'af.parcel.insert.unapproved',
-      collection: Parcels,
-      type: 'method',
-      meteormethod: 'parcels.insert.unapproved',
-      template: 'bootstrap3-inline',
+    AccountsTemplates.forceLogin(() => {
+      Modal.show('Autoform_edit', {
+        title: 'pleaseSupplyParcelData',
+        id: 'af.parcel.insert.unapproved',
+        collection: Parcels,
+        type: 'method',
+        meteormethod: 'parcels.insert.unapproved',
+        template: 'bootstrap3-inline',
+      });
     });
   },
 });
@@ -296,6 +294,39 @@ AutoForm.addHooks('af.parcel.update', {
 //    console.log(`modifier: ${JSON.stringify(modifier)}`);
     modifier.$set.approved = true;
     return modifier;
+  },
+});
+
+function onJoinParcelInsertSuccess(parcelId) {
+  // const parcelId = Parcels.find({ communityId }, { sort: { createdAt: -1 } }).fetch()[0]._id;
+  const communityId = FlowRouter.current().params._cid;
+  const communityName = Communities.findOne(communityId).name;
+  insertMembershipUnapproved.call({
+    person: { userId: Meteor.userId() },
+    communityId,
+    approved: false,
+    role: 'owner',
+    parcelId,
+    ownership: {
+      share: new Fraction(1),
+    },
+  }, (err, res) => {
+    if (err) displayError(err);
+    else displayMessage('success', 'Joined community', communityName);
+    FlowRouter.go('App.home');
+  });
+}
+
+AutoForm.addModalHooks('af.parcel.insert.unapproved');
+AutoForm.addHooks('af.parcel.insert.unapproved', {
+  formToDoc(doc) {
+    const communityId = FlowRouter.current().params._cid;
+    doc.communityId = communityId;
+    doc.approved = false;
+    return doc;
+  },
+  onSuccess(formType, result) {
+    onJoinParcelInsertSuccess(result);
   },
 });
 
