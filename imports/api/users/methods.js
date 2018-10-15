@@ -1,3 +1,44 @@
+
+const valami = [
+  {
+    name: 'Meteor',
+    address: 'meteor/meteor'
+  },
+  {
+    name: 'ValidatedMethod',
+    address: 'meteor/mdg:validated-method'
+  },
+  {
+    name: 'SimpleSchema',
+    address: 'meteor/aldeed:simple-schema'
+  }, 
+  {
+    name: 'Accounts',
+    address: 'meteor/accounts-base'
+  }, 
+  {
+    name: 'debugAssert',
+    address: '/imports/utils/assert.js',
+  
+  }, 
+  {
+    name: 'toggleElementInArray',
+    address: '/imports/api/utils.js'
+  }, 
+];
+
+
+function safeImport (moduleArray) {
+  for(let i = 0; i <= moduleArray.length-1; i++) {
+    import(moduleArray[i].address)
+      .then(() => { console.log(moduleArray[i].name, 'is succesfully imported') })
+      .catch((err) => { console.log(moduleArray[i].name, err, 'Dependency bug!') })
+  }  
+}
+
+safeImport(valami);
+
+/*
 import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
@@ -5,7 +46,7 @@ import { Accounts } from 'meteor/accounts-base';
 
 import { debugAssert } from '/imports/utils/assert.js';
 import { toggleElementInArray } from '/imports/api/utils.js';
-
+*/
 import './users.js';
 
 export const invite = new ValidatedMethod({
