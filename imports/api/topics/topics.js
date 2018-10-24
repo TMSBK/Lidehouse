@@ -4,26 +4,26 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { Factory } from 'meteor/dburles:factory';
 import { _ } from 'meteor/underscore';
 import faker from 'faker';
+import { check } from 'meteor/check';
 
 import { Timestamps } from '/imports/api/timestamps.js';
 import { Comments } from '/imports/api/comments/comments.js';
 import { Communities } from '/imports/api/communities/communities.js';
 import '/imports/api/users/users.js';
 import { Agendas } from '/imports/api/agendas/agendas.js';
+import { revision } from '/imports/api/revision.js';
 import { likesSchema, likesHelpers } from './likes.js';
 import { flagsSchema, flagsHelpers } from './flags.js';
-import { revision } from '/imports/api/revision.js'; 
 
 class TopicsCollection extends Mongo.Collection {
   insert(topic, callback) {
     return super.insert(topic, callback);
   }
-  update(selector, modifier) {
+  update(selector, modifier, options, callback) {
     revision(selector, modifier, 'text', 'title', 'closed');
-    return super.update(selector, modifier);
+    return super.update(selector, modifier, options, callback);
   }
   remove(selector, callback) {
-    Comments.remove({ topicId: selector });
     return super.remove(selector, callback);
   }
 }
@@ -143,13 +143,6 @@ Meteor.startup(function attach() {
   // Topics.schema.i18n('schemaTopics'); // sub-type of Topics will define their own translations
   Topics.simpleSchema().i18n('schemaTopics');
   Topics.schema.i18n('schemaTopics');
-});
-
-// Deny all client-side updates since we will be using methods to manage this collection
-Topics.deny({
-  insert() { return true; },
-  update() { return true; },
-  remove() { return true; },
 });
 
 // This represents the keys from Topics objects that should be published to the client.

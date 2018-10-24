@@ -1,10 +1,16 @@
 import { Meteor } from 'meteor/meteor';
 import { AccountsTemplates } from 'meteor/useraccounts:core';
-
+import { ServiceConfiguration } from 'meteor/service-configuration';
 import { debugAssert } from '/imports/utils/assert.js';
 
+/**
+ * The useraccounts package must be configured for both client and server to work properly.
+ * See the Guide for reference (https://github.com/meteor-useraccounts/core/blob/master/Guide.md)
+ */
+
 /*
-These not needed anymore, as we do a higher level configuration in the AccountTemplates package, which sets these
+Accounts.config not needed anymore,
+we do a higher level configuration in the AccountTemplates package, which sets these
 
 Accounts.config({
   sendVerificationEmail: true,
@@ -21,11 +27,6 @@ Accounts.ui.config({
 });
 */
 
-/**
- * The useraccounts package must be configured for both client and server to work properly.
- * See the Guide for reference (https://github.com/meteor-useraccounts/core/blob/master/Guide.md)
- */
-
 AccountsTemplates.configure({
   showForgotPasswordLink: true,
   sendVerificationEmail: true,
@@ -40,6 +41,33 @@ AccountsTemplates.configure({
   // postSignUpHook(userId, info) { set some user settings here? },
 });
 
+// --- SERVICES ---
+// Signin services can be configured in the Settings file
+if (Meteor.settings.facebook) {
+  ServiceConfiguration.configurations.upsert({
+    service: 'facebook',
+  }, {
+    $set: {
+      appId: Meteor.settings.facebook.appId,
+      loginStyle: 'popup',
+      secret: Meteor.settings.facebook.secret,
+    },
+  });
+}
+
+if (Meteor.settings.google) {
+  ServiceConfiguration.configurations.upsert({
+    service: 'google',
+  }, {
+    $set: {
+      clientId: Meteor.settings.google.clientId,
+      loginStyle: 'popup',
+      secret: Meteor.settings.google.client_secret,
+    },
+  });
+}
+
+// --- ROUTING ---
 // Here are some blank functions, so we can configure AccountsTemplates on server side without pulling in UI libraries
 let signinRedirect = () => { debugAssert(false); };
 let enrollRedirect = () => { debugAssert(false); };
@@ -47,6 +75,7 @@ let enrollRedirect = () => { debugAssert(false); };
 if (Meteor.isClient) {
   import { FlowRouter } from 'meteor/kadira:flow-router';
   import { connectMe } from '/imports/api/memberships/methods.js';
+  import { showWelcomeModal } from '/imports/ui_3/views/modals/welcome-modal.js';
 
   let signinRedirectRoute;
   let signinRedirectAction;
@@ -64,6 +93,7 @@ if (Meteor.isClient) {
   enrollRedirect = function () {
     connectMe.call();
     FlowRouter.go('App.home');
+    showWelcomeModal();
   };
 
   // Use this function if you need to perform some action that only logged in users can
