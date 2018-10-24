@@ -6,12 +6,7 @@ import { _ } from 'meteor/underscore';
 
 import { AutoForm } from 'meteor/aldeed:autoform';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-<<<<<<< HEAD
-import { setRouteBeforeSignin } from '/imports/startup/both/useraccounts-configuration.js';
-
-=======
 import { AccountsTemplates } from 'meteor/useraccounts:core';
->>>>>>> upstream/master
 import { TAPi18n } from 'meteor/tap:i18n';
 import { datatables_i18n } from 'meteor/ephemer:reactive-datatables';
 import { Fraction } from 'fractional';
