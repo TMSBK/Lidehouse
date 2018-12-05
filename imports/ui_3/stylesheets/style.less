@@ -1,4 +1,4 @@
-
+@import "navigation.less";
 @import "vote.less";
 @import "reports.less";
 
@@ -37,6 +37,10 @@ button, button p,
     white-space: pre-line;
 }
 
+.nowrap {
+    white-space: nowrap;
+}
+
 .tr-bold {
     td {
         font-weight: bold;
@@ -64,6 +68,10 @@ button, button p,
 
 //.nav li > a > i  { transition: all .2s ease-in-out; }
 .nav li.active > a > i { transform: scale(1.35); }
+
+.darker-nav-bg {
+    background: darken(@nav-bg, 3%);
+  }
 
 @media screen and (min-width: 768px) {
     .rwd-break {

@@ -47,7 +47,15 @@
   "messengerHistoryPlaceholder": "No messages yet between you. <br> Start chatting today!",
   "commentEditInstruction": "Press enter to save, escape to cancel.",
   "errorInFormFieldValidation": "The form is incomplete. The red fields have to be filled with valid data.",
-  "userAccountsSubtitle": "Log in to enjoy all functionalities of this app",
+  "userAccountsSubtitle": {
+    "signIn": "Please log in to use the app",
+    "signUp": "",
+    "resendVerificationEmail": "",
+    "forgotPwd": "",
+    "changePwd": "",
+    "resetPwd": "",
+    "enrollAccount": "Please give a min 6 character password, to create your account"
+  },
   "documentStoreSubtitle": "Here you find the shared documents of this community.",
   "documentStorePlaceholder": "You can upload here the important shared documents, like the founding papers, house rules.",
   "rankedVotingInstructions": "Please rank the choices below according to your preference...",
@@ -89,7 +97,7 @@
   "deleteUserWarning": ["BEWARE: Your user account will be permanently deleted! <br /><br />",
     "Note that this will NOT delete your activity in your communities. ",
     "Those belong to the community, and you need to ask the community's admin to delete them. <br /><br />",
-    "You may read our <a href='privacy'>Privacy Statement</a>"],
+    "You may read our <a href='privacy' target='blank'>Privacy Statement</a>"],
   "welcome": "Welcome on Honline!",
   "welcomeMessage": "Please set your most important settings. You will be able to change these settings later on the profile page, where you can also enter your personal information.",
 

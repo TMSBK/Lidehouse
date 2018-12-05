@@ -37,6 +37,8 @@
   "by": "által",
   "(Select one)": "(Válasszon a listából)",
 
+  "Archived": "Archív",
+
   // roles
   "admin": "admin",
   "manager": "közös képviselő",
@@ -77,12 +79,17 @@
   "Houses": "Házak",
   "About": "Rólunk",
   "Action buttons": "Akció gombok",
+  
+  "Technical support": "Technikai segítségnyújtás",
+  "We are here to answer your questions": "Ha bármi kérdése van a rendszer használatával kapcsolatban, örömmel állunk rendelkezésére.",
+  "How may I help you": "Miben segíthetek önnek",
+  "your question": "kérdés, észrevétel",
 
   // api
   "name": "név",
   "user": "felhasználó",
   "username": "felhasználónév",
-  "profile": "profil",
+  "Profile settings": "Profil beállítások",
   "firstName": "keresztnév",
   "lastName": "vezetéknév",
   "community": "közösség",
@@ -195,6 +202,7 @@
   "Unhide comments from": "%s hozzászólásainak mutatása",
   "Content hidden by": "A tartalmat nem mutatjuk a(z) %s kérésére",
   "you": "ön",
+  "Do show content": "Mégis mutassuk",
 
   // voting
   "choice": "választási lehetőség",
@@ -362,7 +370,15 @@
   "commentEditInstruction": "Mentéshez nyomja meg az enter, elvetéshez az escape billentyűt.",
 
   "User data page": "Felhasználói adatlap",
-  "userAccountsSubtitle": "Bejelentkezett felhasználók minden funkciót elérhetnek",
+  "userAccountsSubtitle": {
+    "signIn": "A rendszer használatához lépjen be",
+    "signUp": "",
+    "resendVerificationEmail": "",
+    "forgotPwd": "",
+    "changePwd": "",
+    "resetPwd": "",
+    "enrollAccount": "Kérjük adjon meg egy legalább 6 karakter hosszú jelszót fiókja létrehozásához"
+  },
   "documentStoreSubtitle": "Mindenki számára elérhető dokumentumok helye.",
   "documentStorePlaceholder": "Ide tölthetők fel a házhoz tartozó fontosabb, mindenki számára elérhető dokumentumok, mint például az SZMSZ vagy a Házirend.",
   "No permission to upload": "Önnek nincs jogosultsága dokumentumok feltöltésére, kérje a közösképviselő segítségét.",
@@ -408,6 +424,8 @@
   "delete sharedfolder successful": "Mappa véglegesen törölve",
   "delete shareddoc successful": "Dokumentum véglegesen törölve",
   "delete comment successful": "Hozzászólás törölve",
+  "insert vote successful": "Szavazás létrehozva",
+  "close vote successful": "Szavazás lezárva",
 
   "Are you sure you want to": "Biztos benne, hogy",
   "delete user": "véglegesen törli a felhasználói fiókját a rendszerből",
@@ -427,6 +445,7 @@
   "delete agenda": "törli a közgyűlést",
   "delete shareddoc": "törli a dokumentumot",
   "delete sharedfolder": "törli a mappát",
+  "close vote": "lezárja a szavazást",
 
   "It will disappear forever": "Ezzel a művelettel véglegesen törlödni fog!",
   "This will let others to delegate to you": "Ez lehetővé teszik mások számára, hogy átadják önnek a szavazatukat.",
@@ -434,19 +453,22 @@
   "This will bill all parcels": "Ezzel minden albetét számára kirójja a számított közös költséget minden hónapra.",
   "This will not delete topics": "Ettől a benne lévő szavazások nem fognak törlődni.",
   "This will delete all contained files as well": "Ezzel egyúttal véglegesen letörli az összes benne lévő fájlt is",
+  "The planned date of closure was ": "A lezárás eredetileg tervezett időpontja ",
 
   "deletedUser": "Törölt felhasználó",
   "deleteUserWarning": ["FIGYELEM: Ön ezzel végérvényesen elveszíti a felhasználói fiókját! <br /><br />",
     "Tájékoztatjuk, hogy a közösségében történt megnyilvánulásai ezzel nem törlődnek. ",
     "Azok a közösség tulajdonát képezik, és törlésüket a közösség rendszergazdájától tudja kérni. <br /><br />",
-    "Olvassa át <a href='privacy'>Adatvédelmi Tájékóztatónkat</a>"],
+    "Olvassa át <a href='privacy' target='blank'>Adatvédelmi Tájékoztatónkat</a>"],
   "Community cannot be deleted while it has active officers" : "A közösség nem törölhető amíg még vannak aktív tisztségviselői. Először törölnie kell ezeket.",
-
+  "Parcel cannot be deleted while it has active owners": "Az albetét nem törölhető, amíg aktív tulajdonosai vannak. Előszőr a tulajdonosokat kell törölnie.",
+  "Admin cannot be deleted if no other admin is appointed.": "Az adminisztrátor nem törölhető, amíg nincs másik kijelölve.",
+  
   "welcome": "Üdvözöljük a Honline rendszerben!",
   "welcomeMessage": "Kérjük állítsa be a legfontosabb beállításait. Ezeket persze később is módosíthatja majd a profil oldalon, ahol megadhatja személyes adatait is.",
   
   // Email Templates
-  "emailEnrollAccountSubject": "Meghívó a Honline használatára",
+  "emailEnrollAccountSubject": "Meghívó a Honline használatára (Enrollment to Honline)",
   "emailEnrollAccount": ["Üdvözöljük!\n",
     "A __name__ közösséghez mint __role__ került hozzáadásra.",
     "Ezúttal meghívjuk a társasház kezelő rendszerhez történő csatlakozásra, ahol nyomon követheti ",
@@ -456,7 +478,17 @@
     "\n__url__ \n",
     "Ha úgy véli, tévedésből kapta ezt az e-mailt vagy nem kíván a közösséghez csatlakozni, ",
     "vegye fel a kapcsolatot az adminisztrátorral a(z) __email__ e-mail címen, és kérje a törlését.",
-    "\nÜdvözlettel, \nA Honline Csapata"],
+    "\nÜdvözlettel, \nA Honline Csapata",
+    "\n\n--- english translation: ---",
+    "Hello, \n",
+    "You have been added as a member of community __name__ with role: __role__. ",
+    "If you think you have been added by accident, or in fact not want to be part of that community, please contact ",
+    "the community administrator at __email__, and ask him to remove you.",
+    "You have been also invited to join the condominium management system, ",
+    "where you can follow the community issues, discuss them and even vote on them. ",
+    "You can start enjoying all of its benefits as soon as you register your account with this email address.",
+    "\nThe following link takes you to our simple one click registration: \n __url__ \n",
+    "Thanks, \nThe Honline team"],
   "emailVerifyEmailSubject": "E-mail cím megerősítés a Honline használatához",
   "emailVerifyEmail": ["Üdvözöljük!\n",
     "Ezzel az e-mail címmel rögzítettük regisztrációját a honline.hu rendszerében. A regisztráció megerősítéséhez, ",
