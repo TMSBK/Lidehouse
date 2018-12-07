@@ -30,7 +30,8 @@ class TopicsCollection extends Mongo.Collection {
 
 export const Topics = new TopicsCollection('topics');
 
-Topics.categoryValues = ['forum', 'vote', 'news', 'ticket', 'room', 'feedback'];
+// Topic categories in order of increasing importance
+Topics.categoryValues = ['feedback', 'forum', 'ticket', 'room', 'vote', 'news'];
 
 Topics.schema = new SimpleSchema({
   communityId: { type: String, regEx: SimpleSchema.RegEx.Id },
@@ -61,23 +62,25 @@ Topics.helpers({
   comments() {
     return Comments.find({ topicId: this._id }, { sort: { createdAt: -1 } });
   },
-  isUnseenBy(userId, seenType) {
+  isUnseenBy(userId, seenType = Meteor.users.SEEN_BY_NOTI) {
     const user = Meteor.users.findOne(userId);
     const lastSeenInfo = user.lastSeens[seenType][this._id];
     return lastSeenInfo ? false : true;
   },
-  unseenCommentsBy(userId, seenType) {
+  unseenCommentsBy(userId, seenType = Meteor.users.SEEN_BY_NOTI) {
     const user = Meteor.users.findOne(userId);
-/*    const lastseenTimestamp = user.lastSeens[seenType][this._id];
-    const messages = lastseenTimestamp ?
-       Comments.find({ topicId: this._id, createdAt: { $gt: lastseenTimestamp } }) :
-       Comments.find({ topicId: this._id });
-    return messages.count();
-    */
     const lastSeenInfo = user.lastSeens[seenType][this._id];
     const lastSeenCommentCounter = lastSeenInfo ? lastSeenInfo.commentCounter : 0;
     const newCommentCounter = this.commentCounter - lastSeenCommentCounter;
     return newCommentCounter;
+  },
+  unseenCommentListBy(userId, seenType = Meteor.users.SEEN_BY_NOTI) {
+    const user = Meteor.users.findOne(userId);
+    const lastSeenInfo = user.lastSeens[seenType][this._id];
+    const messages = lastSeenInfo ?
+       Comments.find({ topicId: this._id, createdAt: { $gt: lastSeenInfo.timestamp } }) :
+       Comments.find({ topicId: this._id });
+    return messages.fetch();
   },
   unseenEventsBy(userId, seenType) {
     return 0; // TODO

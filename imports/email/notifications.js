@@ -4,11 +4,11 @@ import { Mailer } from 'meteor/lookback:emails';
 
 function sendNotifications(user) {
   user.communities().forEach((community) => {
-    //let thingsHappened = false;
+    // let thingsHappened = false;
     Mailer.send({
       to: user.getPrimaryEmail(),
       subject: 'Updates from honline',
-      template: 'notifications',
+      template: 'Notification_Email',
       data: {
         userId: user._id,
         communityId: community._id,
