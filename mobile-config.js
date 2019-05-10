@@ -1,6 +1,14 @@
 /* globals App */
 /* eslint-disable quote-props */
 
+App.configurePlugin('cordova-plugin-googleplus', {
+  'REVERSED_CLIENT_ID': 'REVERSED_CLIENT_ID_FOR_cordova-plugin-googleplus',
+});
+
+App.configurePlugin('phonegap-plugin-push', {
+  'SENDER_ID': 'SENDER_ID_FOR_phonegap-plugin-push',
+});
+
 App.info({
   name: 'LiDeHouse',
   description: 'Liquid Democracy comes to your doorsteps',
@@ -12,14 +20,14 @@ App.info({
 
 App.icons({
   // iOS
-  'iphone_2x': 'resources/icons/icon-60x60@2x.png',
-  'ipad': 'resources/icons/icon-76x76.png',
-  'ipad_2x': 'resources/icons/icon-76x76@2x.png',
+  'iphone_2x': 'resources/icons/user-icon.png',
+  'ipad': 'resources/icons/user-icon.png',
+  'ipad_2x': 'resources/icons/user-icon.png',
 
   // Android
-  'android_mdpi': 'resources/icons/icon-48x48.png',
-  'android_hdpi': 'resources/icons/icon-72x72.png',
-  'android_xhdpi': 'resources/icons/icon-96x96.png',
+  'android_mdpi': 'resources/icons/user-icon.png',
+  'android_hdpi': 'resources/icons/user-icon.png',
+  'android_xhdpi': 'resources/icons/user-icon.png',
 });
 
 App.launchScreens({
