@@ -1,2 +1,4 @@
 cordova-android-support-gradle-release@3.0.0
 cordova-plugin-crosswalk-webview@2.4.0
+cordova-plugin-statusbar@2.3.0
+cordova-plugin-splashscreen@4.1.0
