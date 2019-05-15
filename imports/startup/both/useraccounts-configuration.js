@@ -68,7 +68,7 @@ if (Meteor.isServer) {
 
 // --- SERVICES ---
 // Signin services can be configured in the Settings file
-if (Meteor.settings.facebook) {
+/*if (Meteor.settings.facebook) {
   ServiceConfiguration.configurations.upsert({
     service: 'facebook',
   }, {
@@ -90,7 +90,7 @@ if (Meteor.settings.google) {
       secret: Meteor.settings.google.client_secret,
     },
   });
-}
+}*/
 
 // --- ROUTING ---
 // Here are some blank functions, so we can configure AccountsTemplates on server side without pulling in UI libraries

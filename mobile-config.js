@@ -48,6 +48,12 @@ App.launchScreens({
   'android_xhdpi_landscape': 'resources/splash/splash-1280x720.png',
 });
 
-App.setPreference('StatusBarOverlaysWebView', 'false');
-App.setPreference('StatusBarBackgroundColor', '#000000');
+// iOS
+// App.setPreference('StatusBarOverlaysWebView', 'false');
+// App.setPreference('StatusBarBackgroundColor', '#000000');
+
+App.setPreference('DisallowOverscroll', 'true');
+// App.setPreference('Fullscreen', 'true');
+App.setPreference('HideKeyboardFormAccessoryBar', true);
+App.setPreference('Orientation', 'default');
 App.setPreference('android-minSdkVersion', 19);
