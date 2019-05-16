@@ -57,3 +57,6 @@ App.setPreference('DisallowOverscroll', 'true');
 App.setPreference('HideKeyboardFormAccessoryBar', true);
 App.setPreference('Orientation', 'default');
 App.setPreference('android-minSdkVersion', 19);
+App.accessRule('http://*', { type: 'intent' });
+App.accessRule('https://*', { type: 'intent' });
+App.accessRule('skype:*', { type: 'intent' });
