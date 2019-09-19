@@ -11,6 +11,7 @@ import { Tickets } from '/imports/api/topics/tickets/tickets.js';
 import { importCollectionFromFile } from '/imports/utils/import.js';
 import { Modal } from 'meteor/peppelg:bootstrap-3-modal';
 import { afTicketInsertModal } from '/imports/ui_3/views/components/tickets-edit.js';
+import { remove as removeContract } from '/imports/api/contracts/methods.js';
 import '/imports/ui_3/views/components/ticket-list.js';
 import './contracts.html';
 
@@ -56,7 +57,7 @@ Template.Contracts.events({
   },
   'click .contract-details .js-delete'(event) {
     const id = $(event.target).data('id');
-    Modal.confirmAndCall(Contracts.methods.remove, { _id: id }, {
+    Modal.confirmAndCall(removeContract, { _id: id }, {
       action: 'delete contract',
       message: 'This will not delete worksheets',
     });
