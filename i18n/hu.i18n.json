@@ -583,6 +583,7 @@
   "Join request notification": "A csatlakozási kérelmet a képviselőknek jóvá kell hagyniuk. A ház adatait csak a kérelem jóváhagyását követően fogja látni, és akkortól fog tudni hozzászólni a témákhoz.",
   "Vote casted": "Szavazat sikeresen leadva",
   "Vote revoked": "Szavazat sikeresen visszavonva",
+  "Contract cannot be deleted while it contains worksheets": "Szerződés nem törölhető addig, amíg munkalapokat tartalmaz",
 
   "invite user successful": "Felhasználó meghívása megtörtént",
   "delete user successful": "Felhasználói fiók törölve",
@@ -642,6 +643,10 @@
   "update settings successful": "Beállítások módosítva",
   "publish balances successful": "Aktuális egyenlegek publikálva",
   "import data successful": "Adatok importálva",
+  "insert contract successful": "Szerződés létrehozva",
+  "update contract successful": "Szerződés módosítva",
+  "delete contract successful": "Szerződés törölve",
+  "This will not delete worksheets": "Ez a művelet nem törli a munkalapokat",
 
   "was inserted": "rögzítésre került",
   "was updated": "módosításra került",
@@ -657,6 +662,7 @@
   "delete roleship": "visszavonja a kiadott tisztséget",
   "delete topic": "törli a bejegyzést",
   "delete comment": "törli a hozzászólást",
+  "delete contract": "törli a szerződést",
   "delete news": "törli a hirdetményt",
   "delete ticket": "törli a hibajegyet",
   "delete breakdown": "törli a könyvelési bontást",

@@ -106,6 +106,12 @@
   "statusChange ticket successful": "change ticket's status successful",
   "statusChange vote successful": "change vote's status successful",
 
+  // contracts
+  "insert contract successful": "insert contract successful",
+  "update contract successful": "update contract successful",
+  "delete contract successful": "delete contract successful",
+  "This will not delete worksheets": "This will not delete worksheets",
+
   // delegations
   "delegationsFromMeInstructions": "Here you can set up delegations. So someone else can use your vote in your name.",
   "delegationsFromMeInstructions2": "The delegations you set up here, can be revoked at any time, or can be redirected toward someone else.",
