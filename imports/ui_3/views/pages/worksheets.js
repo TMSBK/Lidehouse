@@ -51,7 +51,16 @@ Template.Worksheets.viewmodel({
   onCreated() {
     this.communityId(this.templateInstance.getCommunityId());
     this.setDefaultFilter();
-    ContextMenu.initialize('Worksheets', Topics, this);
+    //ContextMenu.initialize('Worksheets', Topics, this);
+    const contextObj = {
+      host: 'Worksheets',
+      template: 'Action_buttons_dropdown_list',
+      actions: 'statusUpdate,statusChange,edit,delete',
+      collection: 'topics',
+      options: {},
+    };
+    this.newTicket = new ContextMenu(this, { host: 'Worksheets', template: 'New_Ticket' }, Topics);
+    this.dropdownElements = new ContextMenu(this, contextObj, Topics);
   },
   setDefaultFilter() {
     this.searchText('');
@@ -89,22 +98,24 @@ Template.Worksheets.viewmodel({
       },
       eventClick(eventObject, jsEvent) {
         event.stopPropagation();
-        const contextObj = {
+        /*const contextObj = {
           template: 'Action_buttons_dropdown_list',
           actions: 'statusUpdate,statusChange,edit,delete',
           collection: 'topics',
           options: {},
           id: eventObject._id,
         };
-        ContextMenu.show(event, contextObj, viewmodel);
+        ContextMenu.show(event, contextObj, viewmodel);*/
+        viewmodel.dropdownElements.show(event, eventObject._id);
       },
       dayClick(date, jsEvent, view) {
         Session.update('modalContext', 'expectedStart', date.toDate());
         event.stopPropagation();
-        const contextObj = {
+        /*const contextObj = {
           template: 'New_Ticket',
         };
-        ContextMenu.show(event, contextObj, viewmodel );
+        ContextMenu.show(event, contextObj, viewmodel );*/
+        viewmodel.newTicket.show(event);
       },
       eventResizeStop(eventObject, jsEvent, ui, view) {
         viewmodel.addEventsToUpdate(eventObject);

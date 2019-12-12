@@ -91,7 +91,8 @@
         {{#if calendarView}}
         <div>
           {{> ReactiveFullcalendar options=calendarOptions }}
-          {{> ContextMenu contextMenu_ctx }}
+          {{> ContextMenu 'Action_buttons_dropdown_list' }}
+          {{> ContextMenu 'New_Ticket' }}
         </div>
         {{else}}
         <div class="no-padding table-responsive">

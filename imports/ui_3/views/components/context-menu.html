@@ -1,5 +1,13 @@
 <template name="ContextMenu">
-    <div id="context-menu" class="dropdown open" style="position: absolute">
-    {{> Template.dynamic template=template }}
+    <div class="context-menu dropdown open" style="position: absolute">
+    {{#let context=(contextMenu_ctx this)}}
+        {{#if context.visible }}
+            {{> listItems context}}
+        {{/if}}
+    {{/let}}
     </div>
+</template>
+
+<template name="listItems">
+    {{> Template.dynamic template=template }}
 </template>

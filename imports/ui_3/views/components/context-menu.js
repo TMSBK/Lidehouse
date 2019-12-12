@@ -5,48 +5,45 @@ import { $ } from 'meteor/jquery';
 
 import './context-menu.html';
 
-function initialize(template, collection, instance) {
-  instance.context = new ReactiveVar({});
-  Template[template].helpers({
-    contextMenu_ctx() {
-      const context = instance.context.get();
-      if (context.id) context.doc = collection.findOne(context.id);
-      return context;
-    },
-  });
-}
+export class ContextMenu {
+  constructor(instance, contextObject, collection) {
+    contextObject.visible = false;
+    this.instance = instance;
+    this.contextObject = contextObject;
+    instance[contextObject.template] = new ReactiveVar(contextObject);
+    
+    Template.ContextMenu.helpers({
+      contextMenu_ctx(template) {
+        const reactiveVar = instance[template].get();
+        if (reactiveVar.id) reactiveVar.doc = collection.findOne(reactiveVar.id);
+        return reactiveVar;
+      },
+    });
 
-function show(event, contextObj, instance) {
-  instance.context.set(contextObj);
-  // We used meteor variable to display, but the hiding is flickering
-  $('#context-menu').css('display', 'block');
-  if (event.screenX > window.innerWidth/2) {
-    $('#context-menu').offset({ left: event.pageX + 10, top: event.pageY - 10 });
-    Meteor.defer(function () { $('#context-menu').children(':first').removeClass('pull-left'); });
-    Meteor.defer(function () { $('#context-menu').children(':first').addClass('pull-right'); });
-  } else {
-    $('#context-menu').offset({ left: event.pageX - 10, top: event.pageY - 10 });
-    Meteor.defer(function () { $('#context-menu').children(':first').removeClass('pull-right'); });
-    Meteor.defer(function () { $('#context-menu').children(':first').addClass('pull-left'); });
+    Template.ContextMenu.events({
+      'click .context-menu'() {
+        contextObject.visible = false;
+        instance[contextObject.template].set(contextObject);
+      },
+      'mouseleave .context-menu'() {
+        contextObject.visible = false;
+        instance[contextObject.template].set(contextObject);
+      },
+    });
+  }
+  show(event, id) {
+    if (id) this.contextObject.id = id;
+    this.contextObject.visible = true;
+    this.instance[this.contextObject.template].set(this.contextObject);
+    if (event.screenX > window.innerWidth/2) {
+      $('.context-menu').offset({ left: event.pageX + 10, top: event.pageY - 10 });
+      Meteor.defer(function () { $('.context-menu').children(':first').removeClass('pull-left'); });
+      Meteor.defer(function () { $('.context-menu').children(':first').addClass('pull-right'); });
+    } else {
+      $('.context-menu').offset({ left: event.pageX - 10, top: event.pageY - 10 });
+      Meteor.defer(function () { $('.context-menu').children(':first').removeClass('pull-right'); });
+      Meteor.defer(function () { $('.context-menu').children(':first').addClass('pull-left'); });
+    }
   }
 }
-
-function hide() {
-  $('#context-menu').css('display', 'none');
-}
-
-export const ContextMenu = {
-  initialize,
-  show,
-  hide,
-};
-
-Template.ContextMenu.events({
-  'click #context-menu'() {
-    hide();
-  },
-  'mouseleave #context-menu'() {
-    hide();
-  },
-});
 
