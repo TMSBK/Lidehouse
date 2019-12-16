@@ -7,6 +7,7 @@ import { Fraction } from 'fractional';
 import { __ } from '/imports/localization/i18n.js';
 import { Modal } from 'meteor/peppelg:bootstrap-3-modal';
 import '/imports/ui_3/views/modals/autoform-modal.js';
+import { getActiveCommunityId } from '/imports/ui_3/lib/active-community.js';
 import { currentUserHasPermission } from '/imports/ui_3/helpers/permissions.js';
 import { importCollectionFromFile } from '/imports/utils/import.js';
 import { handleError, onSuccess, displayError, displayMessage } from '/imports/ui_3/lib/errors.js';
@@ -53,36 +54,61 @@ Parcels.actions = {
     icon: (options, doc) => (doc && doc.isLed() ? 'fa fa-user-o' : 'fa fa-user'),
     color: (options, doc) => {
       let colorClass = '';
-      if (Memberships.findOneActive({ parcelId: doc._id, approved: false })) colorClass = 'text-danger';
+      if (Memberships.findOneActive({ parcelId: doc._id, approved: false })) colorClass = 'danger';
       else {
         const representor = Memberships.findOneActive({ parcelId: doc._id, 'ownership.representor': true });
         if (representor) {
           if (!representor.accepted) {
-            if (!representor.personId) colorClass = 'text-warning';
-            else colorClass = 'text-info';
+            if (!representor.personId) colorClass = 'warning';
+            else colorClass = 'info';
           }
         } else {  // no representor
           if (Memberships.findOneActive({ parcelId: doc._id, accepted: false })) {
-            if (Memberships.findOneActive({ parcelId: doc._id, personId: { $exists: false } })) colorClass = 'text-warning';
-            else colorClass = 'text-info';
+            if (Memberships.findOneActive({ parcelId: doc._id, personId: { $exists: false } })) colorClass = 'warning';
+            else colorClass = 'info';
           }
         }
       }
       return colorClass;
     },
     visible: (options, doc) => currentUserHasPermission('memberships.inCommunity', doc),
-    href: () => '#occupants',
     run(options, doc, event, instance) {
-      instance.viewmodel.selectedParcelId(doc._id);
+      Modal.show('Modal', {
+        title: `${doc ? doc.display() : __('unknown')} - ${__('occupants')}`,
+        body: 'Occupants_box',
+        bodyContext: {
+          communityId: doc.communityId,
+          parcelId: doc._id,
+        },
+        size: currentUserHasPermission('memberships.details', doc) ? 'lg' : 'md',
+      });
     },
   },
   meters: {
     name: 'meters',
     icon: () => 'fa fa-tachometer',
-    visible: (options, doc) => currentUserHasPermission('meters.inCommunity', doc),
-    href: () => '#meters',
+    visible: (options, doc) => {
+      return currentUserHasPermission('meters.insert', doc) || currentUserHasPermission('meters.insert.unapproved', doc);
+    },
     run(options, doc, event, instance) {
-      instance.viewmodel.selectedParcelId(doc._id);
+      Modal.show('Modal', {
+        title: `${doc ? doc.display() : __('unknown')} - ${__('meters')}`,
+        body: 'Meters_box',
+        bodyContext: {
+          communityId: doc.communityId,
+          parcelId: doc._id,
+        },
+        size: currentUserHasPermission('meters.update', doc) ? 'lg' : 'md',
+      });
+    },
+  },
+  finances: {
+    name: 'finances',
+    icon: () => 'fa fa-money',
+    visible: (options, doc) => currentUserHasPermission('parcels.inCommunity', doc),
+    href: () => '#view-target',
+    run(options, doc, event, instance) {
+      instance.viewmodel.parcelToView(doc._id);
     },
   },
   edit: {
@@ -161,7 +187,7 @@ AutoForm.addModalHooks('af.parcel.insert');
 AutoForm.addModalHooks('af.parcel.update');
 AutoForm.addHooks('af.parcel.insert', {
   formToDoc(doc) {
-    doc.communityId = Session.get('selectedCommunityId');
+    doc.communityId = getActiveCommunityId();
     return doc;
   },
 });
@@ -175,7 +201,7 @@ AutoForm.addHooks('af.parcel.update', {
 AutoForm.addModalHooks('af.parcel.insert.unapproved');
 AutoForm.addHooks('af.parcel.insert.unapproved', {
   formToDoc(doc) {
-    doc.communityId = Session.get('selectedCommunityId');
+    doc.communityId = getActiveCommunityId();
     doc.approved = false;
     return doc;
   },

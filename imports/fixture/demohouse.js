@@ -50,7 +50,7 @@ export function insertDemoHouse(lang, demoOrTest) {
       Communities.remove(demoHouse._id);
     } else {
 //      Balances.checkAllCorrect();
-      return;
+      return demoHouse._id;
     }
   }
 
@@ -925,7 +925,7 @@ export function insertDemoHouse(lang, demoOrTest) {
     ['Assets', 'Megtakarítási számla', 120000],
   ];
   openings.forEach((opening) => {
-    demoBuilder.insert(Transactions, 'transaction', {
+    demoBuilder.create('opening', {
       valueDate: new Date(`${lastYear}-01-01`),
       amount: opening[2],
       credit: [{
@@ -996,7 +996,7 @@ export function insertDemoHouse(lang, demoOrTest) {
 
   // === Incomes ===
 
-  demoBuilder.insert(Transactions, 'transaction', {
+  demoBuilder.create('income', {
     valueDate: new Date(`${lastYear}-06-01`),
     amount: 3500,
     credit: [{
@@ -1009,7 +1009,7 @@ export function insertDemoHouse(lang, demoOrTest) {
   });
 
   ['02', '04', '06', '08', '10', '12'].forEach(mm => {
-    demoBuilder.insert(Transactions, 'transaction', {
+    demoBuilder.create('income', {
       valueDate: new Date(`${lastYear}-${mm}-01`),
       amount: 400,
       credit: [{
@@ -1022,7 +1022,7 @@ export function insertDemoHouse(lang, demoOrTest) {
     });
   });
 
-  demoBuilder.insert(Transactions, 'transaction', {
+  demoBuilder.create('income', {
     valueDate: new Date(`${lastYear}-09-15`),
     amount: 500000,
     credit: [{
@@ -1035,7 +1035,7 @@ export function insertDemoHouse(lang, demoOrTest) {
     note: __('demo.transactions.note.1'),
   });
 
-  demoBuilder.insert(Transactions, 'transaction', {
+  demoBuilder.create('income', {
     valueDate: new Date(`${lastYear}-05-10`),
     amount: 55000,
     credit: [{
@@ -1048,7 +1048,7 @@ export function insertDemoHouse(lang, demoOrTest) {
     note: __('demo.transactions.note.2'),
   });
 
-  demoBuilder.insert(Transactions, 'transaction', {
+  demoBuilder.create('income', {
     valueDate: new Date(`${lastYear}-10-15`),
     amount: 500000,
     credit: [{
@@ -1061,7 +1061,7 @@ export function insertDemoHouse(lang, demoOrTest) {
     note: __('demo.transactions.note.3'),
   });
 
-  demoBuilder.insert(Transactions, 'transaction', {
+  demoBuilder.create('income', {
     valueDate: new Date(`${lastYear}-07-21`),
     amount: 2300000,
     credit: [{
@@ -1076,7 +1076,7 @@ export function insertDemoHouse(lang, demoOrTest) {
   // == Expenses
 
   for (let mm = 1; mm < 13; mm++) {
-    demoBuilder.insert(Transactions, 'transaction', {
+    demoBuilder.create('expense', {
       valueDate: new Date(`${lastYear}-${mm}-${_.sample(['03', '04', '05', '06', '08', '10'])}`),
       amount: 80000 + Math.floor(Math.random() * 50000),
       credit: [{
@@ -1088,7 +1088,7 @@ export function insertDemoHouse(lang, demoOrTest) {
       }],
     });
 
-    demoBuilder.insert(Transactions, 'transaction', {
+    demoBuilder.create('expense', {
       valueDate: new Date(`${lastYear}-${mm}-${_.sample(['03', '04', '05', '06', '08', '10'])}`),
       amount: 98500,
       credit: [{
@@ -1100,7 +1100,7 @@ export function insertDemoHouse(lang, demoOrTest) {
       }],
     });
 
-    demoBuilder.insert(Transactions, 'transaction', {
+    demoBuilder.create('expense', {
       valueDate: new Date(`${lastYear}-${mm}-${_.sample(['03', '04', '05', '06', '07', '08', '10'])}`),
       amount: 150000 + Math.floor(Math.random() * 50000),
       credit: [{
@@ -1115,6 +1115,8 @@ export function insertDemoHouse(lang, demoOrTest) {
 
   Balances.methods.publish._execute({ userId: demoAccountantId }, { communityId: demoCommunityId });
   Clock.clear();
+
+  return demoCommunityId;
 }
 
 // ----------------------------------------------------------------
@@ -1132,7 +1134,7 @@ function purgeDemoUserWithParcel(userId, parcelId, communityId) {
   const demoUserVote = 'voteCasts.' + userId;
   const demoUserVoteIndirect = 'voteCastsIndirect.' + userId;
   Topics.update({ [demoUserVote]: { $exists: true } },
-    { $unset: { [demoUserVote]: 1 } }, { multi: true });
+    { $unset: { [demoUserVote]: 1 } }, { multi: true, selector: { category: 'vote' } });
   const modifiedTopics = Topics.find({ [demoUserVoteIndirect]: { $exists: true } });
   if (Meteor.isServer) {
     modifiedTopics.forEach(topic => topic.voteEvaluate(false));
@@ -1182,6 +1184,16 @@ Meteor.methods({
     });
     const demoMembership = Memberships.findOne(demoMembershipId);
 
+    Clock.starts(4, 'months', 'ago');
+    const waterMeterId = demoBuilder.create('meter', { parcelId: demoParcelId, service: 'coldWater' });
+    const heatingMeterId = demoBuilder.create('meter', { parcelId: demoParcelId, service: 'heating' });
+    Clock.tick(3, 'weeks');
+    demoBuilder.execute(Meters.methods.registerReading, { _id: waterMeterId,
+      reading: { date: Clock.currentTime(), value: 255 } });
+    demoBuilder.execute(Meters.methods.registerReading, { _id: heatingMeterId,
+      reading: { date: Clock.currentTime(), value: 133 } });
+    Clock.clear();
+
     Localizer.addParcel(demoCommunityId, demoParcel, lang);
 
     const demoManagerId = demoBuilder.getUserWithRole('manager');
@@ -1200,13 +1212,13 @@ Meteor.methods({
       userId: demoUserId,
       participantIds: [demoUserId, chatPartnerId],
     });
-    Clock.setSimulatedTime(moment().subtract(6, 'hours').toDate());
+    Clock.starts(6, 'hours', 'ago');
     demoBuilder.insert(Comments, 'comment', {
       topicId: demoUserMessageRoom2,
       creatorId: demoUserId,
       text: __('demo.messages.0'),
     });
-    Clock.setSimulatedTime(moment().subtract(3, 'hours').toDate());
+    Clock.starts(3, 'hours', 'ago');
     demoBuilder.insert(Comments, 'comment', {
       topicId: demoUserMessageRoom2,
       creatorId: chatPartnerId,
@@ -1226,7 +1238,7 @@ Meteor.methods({
   },
 });
 
-export function purgeExpiringDemoUsers(lang, demoOrTest = 'demo') {
+export function scheduePurgeExpiringDemoUsers(lang, demoOrTest = 'demo') {
   const __ = function translate(text) { return TAPi18n.__(text, {}, lang); };
   const community = Communities.findOne({ name: __(`${demoOrTest}.house`) });
   if (!community) return;
