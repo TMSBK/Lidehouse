@@ -72,6 +72,8 @@
     <div class="ibox">
       <div class="ibox-title"> 
         <h3>{{_ 'worksheets'}}</h3>
+        <div id="huhu"></div>
+        <div id="hihi"></div>
         <div class="btn-group m-l-md">
           <button type="button" class="btn btn-xs btn-white js-mode {{#if (not calendarView)}}active{{/if}}"><i class="fa fa-list"></i></button>
           <button type="button" class="btn btn-xs btn-white js-mode {{#if calendarView}}active{{/if}}" ><i class="fa fa-calendar"></i></button>
@@ -91,8 +93,8 @@
         {{#if calendarView}}
         <div>
           {{> ReactiveFullcalendar options=calendarOptions }}
-          {{> ContextMenu 'Action_buttons_dropdown_list' }}
-          {{> ContextMenu 'New_Ticket' }}
+          <!--{{> ContextMenu 'Action_buttons_dropdown_list' }}
+          {{> ContextMenu 'New_Ticket' }}-->
         </div>
         {{else}}
         <div class="no-padding table-responsive topics">

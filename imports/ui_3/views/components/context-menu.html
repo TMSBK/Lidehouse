@@ -1,5 +1,5 @@
 <template name="ContextMenu">
-    {{#let context=(contextMenu_ctx this)}}
+    {{#let context=(contextMenu_ctx)}}
     <div id="{{context.template}}" class="dropdown open" style="position: absolute">
         {{#if context.visible }}
             {{> listItems context}}

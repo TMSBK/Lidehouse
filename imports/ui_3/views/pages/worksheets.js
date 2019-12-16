@@ -57,13 +57,13 @@ Template.Worksheets.viewmodel({
     //ContextMenu.initialize('Worksheets', Topics, this);
   },
   onRendered() {
-    this.newTicket = new ContextMenu(this, { template: 'New_Ticket' });
-    this.dropdownList = new ContextMenu(this, {
+    this.newTicket = new ContextMenu({ template: 'New_Ticket' }, 'hihi');
+    this.dropdownList = new ContextMenu({
       template: 'Action_buttons_dropdown_list',
       actions: 'statusUpdate,statusChange,edit,delete',
       collection: 'topics',
       options: {},
-    }, $('#huhu'));
+    }, 'huhu');
   },
   setDefaultFilter() {
     this.searchText('');
